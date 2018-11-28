@@ -34,7 +34,7 @@ export class RegistroPage {
       correo: this.correo,
       contra: this.contra
     });
-
+    // modicar la llave para tener diferentes usuarios
     this.storage.set('usuarios', JSON.stringify(this.usuarios));
     this.navCtrl.pop();
   }
