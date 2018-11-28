@@ -1,14 +1,59 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import {AlertController, NavController} from 'ionic-angular';
+import {RegistroPage} from "../registro/registro";
+import {Storage} from "@ionic/storage";
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
 export class HomePage {
+  correo = '';
+  contra = '';
 
-  constructor(public navCtrl: NavController) {
+  registro = RegistroPage;
 
+  usuarios = [];
+
+  constructor(public navCtrl: NavController, public alert: AlertController, public storage: Storage) {
+    this.storage.keys()
+      .then(keys => {
+        if (keys.some(k => k == 'usuarios')) {
+          this.storage.get('usuarios')
+            .then(usuarios => {
+              this.usuarios = JSON.parse(usuarios);
+            });
+        }
+      });
+  }
+
+  clickSesion() {
+    console.log(this.correo);
+    console.log(this.contra);
+
+    let index = this.usuarios.findIndex(u => u.correo == this.correo && u.contra == this.contra);
+
+    if (index >= 0) {
+      const alerta = this.alert.create({
+        title: "App",
+        subTitle: "Inicio de Sesión Válido",
+        buttons: ['Ok']
+      });
+      alerta.present();
+    }
+    else {
+      const alerta = this.alert.create({
+        title: "App",
+        subTitle: "Inicio de Sesión No Válido",
+        buttons: ['Ok']
+      });
+      alerta.present();
+    }
+
+  }
+
+  clickRegistro() {
+    this.navCtrl.push(this.registro, {usuarios: this.usuarios});
   }
 
 }
